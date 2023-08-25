@@ -3,6 +3,13 @@ import numpy as np
 from sys import argv
 from os.path import isfile
 
+# hog parameters
+HEIGHT = 24
+WIDTH = 24
+CELL_SIZE = (6, 6)
+BLOCK_SIZE = (CELL_SIZE[0]*2, CELL_SIZE[1]*2)
+NUM_BINS = 9
+
 def correct_skew(img, delta=1, limit=5):
     """
     Corrige a inclinação da imagem
@@ -29,34 +36,33 @@ def correct_skew(img, delta=1, limit=5):
 
     return corrected, best_angle
 
-def hog_init(X=24, Y=24, cellhw=6):
+def hog_init():
     """
     Inicializa o descritor HOG (Histrogram of Oriented Gradients) 
     """
 
-    winSize = (X,Y)    
-    cellSize = (cellhw,cellhw)    
-    blockSize = (cellSize[0]*2, cellSize[1]*2)
+    winSize = (WIDTH,HEIGHT)    
+    cellSize = CELL_SIZE    
+    blockSize = BLOCK_SIZE
     blockStride = cellSize
-    nbins = 9
-    signedGradients = True
+    nbins = NUM_BINS
 
-    return cv2.HOGDescriptor(winSize,blockSize,blockStride, cellSize, nbins, 1, -1, 0, 0.2, 1, 64, signedGradients)
+    return cv2.HOGDescriptor(winSize, blockSize, blockStride, cellSize, nbins, 1, -1, 0, 0.2, 1, 64, True)
 
-def feature_extractor(image, hog, size=24):
+def feature_extractor(image, hog):
     """
     Extrator que usa o HOG para 
     gerar o vetor de caracteristicas
     """
     
-    image = cv2.resize(image, (size,size))
+    image = cv2.resize(image, (WIDTH,HEIGHT))
     retval, thrsh = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
     if not retval:
         return
 
     rotated, _ = correct_skew(thrsh)
-    descriptor = hog.compute(rotated)
+    descriptor = hog.compute(image)
     
     feature_vector = ""
     for d in descriptor:
@@ -77,18 +83,31 @@ def main():
     hog = hog_init()
 
     lines = img_files.readlines()
+    fnum = len(lines)
+    if fnum > 0:
+        print(f"Found {fnum} files.")
+    else:
+        print("No files found.")
+        return
+
+    i = 1
     for line in lines:
         filename, label = line.split()[0:2]
         filename = f"digits/{filename}"
 
         if not isfile(filename):
             continue
-
+        
+        print(f"File {i}/{fnum}...")
         img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
         feature_vector = feature_extractor(img, hog)
 
         if feature_vector != None:
             output_file.write(f"{label} {feature_vector}\n")
+
+        i += 1
+
+    print("Done.")
 
 if __name__ == "__main__":
     main()

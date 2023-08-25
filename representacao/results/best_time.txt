@@ -30,7 +30,7 @@ Accuracy:  0.975
     accuracy                           0.97       600
    macro avg       0.97      0.97      0.97       600
 weighted avg       0.98      0.97      0.98       600
-Time ellapsed: 0.31995201110839844
+Time ellapsed: 0.31995201110839844 **********************************************
 
 K = 4, Metric = euclidean
 Loading data...

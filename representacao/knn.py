@@ -23,10 +23,6 @@ def knn_classifier(fname, k, metric):
     print ("Spliting data...")
     X_train, X_test, y_train, y_test =  train_test_split(X_data, y_data, test_size=0.3, random_state = 5)
 
-    #scaler = preprocessing.MinMaxScaler()
-    #X_train = scaler.fit_transform(X_train)
-    #X_test = scaler.fit_transform(X_test)
-
     # cria um kNN
     neigh = KNeighborsClassifier(n_neighbors=k, metric=metric)
 
@@ -50,15 +46,14 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit("Use: knn.py <file>")
             
-    # for k in range(1, 10):
-    # for metric in ['cityblock', 'cosine', 'euclidean', 'l1', 'l2', 'manhattan', 'nan_euclidean']:
-    for metric in ['cosine', 'euclidean', 'l2', 'nan_euclidean']:
-        try:
-            print(f"K = {4}, Metric = {metric}")
-            start_time = time()
-            knn_classifier(sys.argv[1], 4, metric)
-            print(f"Time ellapsed: {time() - start_time}")
-        except Exception:
-            pass
+    for k in range(1, 10):
+        for metric in ['cityblock', 'euclidean', 'cosine', 'l1']:
+            try:
+                print(f"K = {k}, Metric = {metric}")
+                start_time = time()
+                knn_classifier(sys.argv[1], 3, metric)
+                print(f"Time ellapsed: {time() - start_time}")
+            except Exception:
+                pass
 
 
