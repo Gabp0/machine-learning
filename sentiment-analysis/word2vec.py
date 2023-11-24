@@ -11,9 +11,9 @@ import argparse
 
 logging.basicConfig(level= logging.DEBUG)
 
-VectorSize = 300
-WindowSize = 15
-MinCount = 2
+VectorSize = 700
+WindowSize = 20
+MinCount = 20
 DataTR = "data/reviews_data.txt.gz"
 #DataTR = "imdb-tr.csv.gz"
 
@@ -149,7 +149,7 @@ if __name__ == "__main__":
 	m = int(args.method)
 	#uncoment this to train word2vec
 	model = read_and_train()
-	save_model(model)
+	# save_model(model)
 	#model = open_model()
 	reviews = read_csv()
 	results = extract_features_mean(model, reviews, m)

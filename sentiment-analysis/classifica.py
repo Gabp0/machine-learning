@@ -29,7 +29,7 @@ model = Sequential()
 # Dense(50) is a fully-connected layer with 50 hidden units.
 # in the first layer, you must specify the expected input data shape:
 # here, 300-dimensional vectors.
-model.add(Dense(50, activation='relu', input_dim=300))
+model.add(Dense(50, activation='relu', input_dim=500))
 model.add(Dense(2, activation='sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
